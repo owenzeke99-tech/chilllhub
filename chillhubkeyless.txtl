@@ -1,0 +1,201 @@
+-- Khai báo Key chính xác và Link Get Key
+local correctKey = "ChillHubKeyGsjei - Hshwiwowiwbkeod"
+local getKeyLink = "https://link4m.net/4TyRVC6P"
+
+-- Tên file lưu trạng thái key trong thư mục của Executor (Lưu trong 24 giờ)
+local saveFileName = "ChillHub_KeyAuth.json"
+local isKeyValid = false
+
+-- Kiểm tra xem người dùng đã lưu key và còn hạn trong vòng 24 giờ qua hay không
+if pcall(function() return readfile(saveFileName) end) then
+    local success, data = pcall(function()
+        return game:GetService("HttpService"):JSONDecode(readfile(saveFileName))
+    end)
+    if success and data and data.key == correctKey and (os.time() - data.time) < 86400 then
+        isKeyValid = true
+    end
+end
+
+-- Nếu key còn hạn thì bỏ qua bảng nhập và chạy thẳng script chính
+if isKeyValid then
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
+    return
+end
+
+local TweenService = game:GetService("TweenService")
+
+-- Tạo giao diện chính
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+local TitleLabel = Instance.new("TextLabel")
+local SubtitleLabel = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local TextBoxCorner = Instance.new("UICorner")
+local ButtonHolder = Instance.new("Frame")
+local CheckButton = Instance.new("TextButton")
+local CheckCorner = Instance.new("UICorner")
+local GetKeyButton = Instance.new("TextButton")
+local GetKeyCorner = Instance.new("UICorner")
+local StatusLabel = Instance.new("TextLabel")
+
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "ChillHubKeySystem"
+
+-- Khung nền đen to bản, hiện đại
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+MainFrame.Position = UDim2.new(0.5, -210, 0.5, -130)
+MainFrame.Size = UDim2.new(0, 420, 0, 260)
+MainFrame.Active = true
+MainFrame.Draggable = true
+
+UICorner.CornerRadius = UDim.new(0, 14)
+UICorner.Parent = MainFrame
+
+-- Viền nhẹ sang trọng cho bảng menu
+UIStroke.Parent = MainFrame
+UIStroke.Color = Color3.fromRGB(40, 40, 40)
+UIStroke.Thickness = 1.5
+
+-- Tiêu đề "CHILL HUB" với font chữ sắc nét
+TitleLabel.Parent = MainFrame
+TitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.BackgroundTransparency = 1.00
+TitleLabel.Position = UDim2.new(0, 0, 0, 18)
+TitleLabel.Size = UDim2.new(1, 0, 0, 35)
+TitleLabel.Font = Enum.Font.GothamBlack
+TitleLabel.Text = "CHILL HUB"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 45, 45) -- Màu đỏ tươi rực rỡ
+TitleLabel.TextSize = 26
+
+-- Tiêu đề phụ tiếng Anh
+SubtitleLabel.Parent = MainFrame
+SubtitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+SubtitleLabel.BackgroundTransparency = 1.00
+SubtitleLabel.Position = UDim2.new(0, 0, 0, 50)
+SubtitleLabel.Size = UDim2.new(1, 0, 0, 20)
+SubtitleLabel.Font = Enum.Font.GothamMedium
+SubtitleLabel.Text = "Please enter your key to continue"
+SubtitleLabel.TextColor3 = Color3.fromRGB(160, 160, 160)
+SubtitleLabel.TextSize = 13
+
+-- Ô nhập Key
+TextBox.Parent = MainFrame
+TextBox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+TextBox.Position = UDim2.new(0.08, 0, 0.36, 0)
+TextBox.Size = UDim2.new(0.84, 0, 0, 48)
+TextBox.Font = Enum.Font.GothamMedium
+TextBox.PlaceholderText = "Paste your key here..."
+TextBox.PlaceholderColor3 = Color3.fromRGB(110, 110, 110)
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.TextSize = 15
+
+TextBoxCorner.CornerRadius = UDim.new(0, 10)
+TextBoxCorner.Parent = TextBox
+
+-- Khung chứa 2 nút bấm ngang nhau (Check Key & Get Key)
+ButtonHolder.Parent = MainFrame
+ButtonHolder.BackgroundTransparency = 1.00
+ButtonHolder.Position = UDim2.new(0.08, 0, 0.62, 0)
+ButtonHolder.Size = UDim2.new(0.84, 0, 0, 45)
+
+-- Nút Check Key (Đỏ tươi)
+CheckButton.Parent = ButtonHolder
+CheckButton.BackgroundColor3 = Color3.fromRGB(255, 45, 45)
+CheckButton.Position = UDim2.new(0, 0, 0, 0)
+CheckButton.Size = UDim2.new(0.48, 0, 1, 0)
+CheckButton.Font = Enum.Font.GothamBold
+CheckButton.Text = "Check Key"
+CheckButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckButton.TextSize = 15
+
+CheckCorner.CornerRadius = UDim.new(0, 10)
+CheckCorner.Parent = CheckButton
+
+-- Nút Get Key
+GetKeyButton.Parent = ButtonHolder
+GetKeyButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+GetKeyButton.Position = UDim2.new(0.52, 0, 0, 0)
+GetKeyButton.Size = UDim2.new(0.48, 0, 1, 0)
+GetKeyButton.Font = Enum.Font.GothamBold
+GetKeyButton.Text = "Get Key"
+GetKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyButton.TextSize = 15
+
+GetKeyCorner.CornerRadius = UDim.new(0, 10)
+GetKeyCorner.Parent = GetKeyButton
+
+-- Dòng trạng thái thông báo
+StatusLabel.Parent = MainFrame
+StatusLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+StatusLabel.BackgroundTransparency = 1.00
+StatusLabel.Position = UDim2.new(0, 0, 0.85, 0)
+StatusLabel.Size = UDim2.new(1, 0, 0, 22)
+StatusLabel.Font = Enum.Font.Gotham
+StatusLabel.Text = ""
+StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+StatusLabel.TextSize = 13
+
+-- Hàm hiệu ứng lắc mượt mà bằng TweenService
+local function playSmoothTweenShake()
+    TextBox.Text = ""
+    
+    local originalPos = UDim2.new(0.5, -210, 0.5, -130)
+    local tweenInfo = TweenInfo.new(0.06, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
+    
+    local steps = {
+        originalPos + UDim2.new(0, 7, 0, 0),
+        originalPos + UDim2.new(0, -7, 0, 0),
+        originalPos + UDim2.new(0, 4, 0, 0),
+        originalPos + UDim2.new(0, -4, 0, 0),
+        originalPos + UDim2.new(0, 2, 0, 0),
+        originalPos + UDim2.new(0, -2, 0, 0),
+        originalPos
+    }
+    
+    for _, targetPos in ipairs(steps) do
+        local tween = TweenService:Create(MainFrame, tweenInfo, {Position = targetPos})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+    
+    MainFrame.Position = originalPos
+end
+
+-- Sự kiện bấm nút Get Key (copy link Link4m của bạn)
+GetKeyButton.MouseButton1Click:Connect(function()
+    setclipboard(getKeyLink)
+    StatusLabel.Text = "Copied Get Key link to clipboard!"
+    StatusLabel.TextColor3 = Color3.fromRGB(80, 200, 255)
+end)
+
+-- Sự kiện bấm nút Check Key
+CheckButton.MouseButton1Click:Connect(function()
+    if TextBox.Text == correctKey then
+        StatusLabel.Text = "Key correct! Loading..."
+        StatusLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
+        
+        -- Lưu key và thời gian hiện tại vào executor để nhớ trong 24 giờ
+        pcall(function()
+            local dataToSave = game:GetService("HttpService"):JSONEncode({
+                key = correctKey,
+                time = os.time()
+            })
+            writefile(saveFileName, dataToSave)
+        end)
+        
+        task.wait(1)
+        ScreenGui:Destroy()
+        
+        -- Chạy script chính
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/tienkhanh1/spicy/main/Chilli.lua"))()
+    else
+        StatusLabel.Text = "Incorrect Key! Please try again."
+        StatusLabel.TextColor3 = Color3.fromRGB(255, 80, 80)
+        
+        coroutine.wrap(playSmoothTweenShake)()
+    end
+end)
